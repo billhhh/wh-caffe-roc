@@ -15,19 +15,24 @@ net = caffe.Net(net_file, caffe_model, caffe.TEST)
 # 得到data的形状，这里的图片是默认matplotlib底层加载的
 transformer = caffe.io.Transformer({'data': net.blobs['data'].data.shape})
 
-# add preprocessing
-transformer = caffe.io.Transformer({'data': net.blobs['data'].data.shape})
-transformer.set_transpose('data', (2,0,1)) # height*width*channel -> channel*height*width
-transformer.set_mean('data', mean_file) #### subtract mean ####
-transformer.set_raw_scale('data', 255) # pixel value range
-transformer.set_channel_swap('data', (2,1,0)) # RGB -> BGR
+# matplotlib加载的image是像素[0-1],图片的数据格式[weight,high,channels]，RGB
+# caffe加载的图片需要的是[0-255]像素，数据格式[channels,weight,high],BGR，那么就需要转换
 
+# channel 放到前面
+transformer.set_transpose('data', (2, 0, 1))
+#transformer.set_mean('data', np.load(mean_file).mean(1).mean(1))
+transformer.set_mean('data',mean_file)
+# 图片像素放大到[0-255]
+transformer.set_raw_scale('data', 255)
+# RGB-->BGR 转换
+transformer.set_channel_swap('data', (2, 1, 0))
 
-# set test batchsize
+'''
+# 设置输入图像大小
 net.blobs['data'].reshape(1,        # batch 大小
                           3,         # 3-channel (BGR) images
-                          224,224)  # 图像大小为:224x224
-
+                          224, 224)  # 图像大小为:224x224
+'''
 
 # 加载图片
 im = caffe.io.load_image('D:/dataset/CXR8/test_set/00022276_000.png')
@@ -47,8 +52,7 @@ for i in xrange(N): # assuming you have N validation samples
     out = net.forward()  # get prediction for x_i
     output_prob = out['prob'][0] #batch中第一张图像的概率值
     y_score.append( output_prob )
-    predict = np.argmax(out['prob'], axis=1)
-    print 'predicted class is:', predict
+    print 'predicted class is:', output_prob.argmax()
 
 # once you have N y_score and y_true values
 fpr, tpr, thresholds = metrics.roc_curve(y_true, y_score, pos_label=1)
