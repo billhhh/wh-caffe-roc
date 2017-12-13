@@ -30,7 +30,7 @@ net.blobs['data'].reshape(1,        # batch 大小
 
 
 # 加载图片
-im = caffe.io.load_image('D:/dataset/CXR8/test_set/00022276_000.png')
+im = caffe.io.load_image('D:/dataset/CXR8/test_set/00022282_003.png')
 # 用上面的transformer.preprocess来处理刚刚加载图片
 transformed_image = transformer.preprocess('data', im)
 #plt.imshow(im)
@@ -47,8 +47,8 @@ for i in xrange(N): # assuming you have N validation samples
     out = net.forward()  # get prediction for x_i
     output_prob = out['prob'][0] #batch中第一张图像的概率值
     y_score.append( output_prob )
-    predict = np.argmax(out['prob'], axis=1)
-    print 'predicted class is:', predict
+    # 打印概率最大的类别代号，argmax()函数是求取矩阵中最大元素的索引
+    print 'predicted class is:', output_prob.argmax()
 
 # once you have N y_score and y_true values
 fpr, tpr, thresholds = metrics.roc_curve(y_true, y_score, pos_label=1)
