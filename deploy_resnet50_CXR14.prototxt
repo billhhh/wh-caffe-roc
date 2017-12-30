@@ -2081,8 +2081,8 @@ layer {
 ### 1
 layer {
 	bottom: "pool5"
-	top: "fc_1"
-	name: "fc_1"
+	top: "fc_4"
+	name: "fc_4"
 	type: "InnerProduct"
 	inner_product_param {
 		num_output: 1
@@ -2090,17 +2090,8 @@ layer {
 }
 
 layer {
-  name: "probability_1"
+  name: "probability_4"
   type: "Sigmoid"
-  bottom: "fc_1"
-  top: "probability_1"
-}
-layer {
-  name: "threshold_1"
-  type: "Threshold"
-  bottom: "probability_1"
-  top: "threshold_1"
-  threshold_param {
-    threshold: 0.5
-  }
+  bottom: "fc_4"
+  top: "probability_4"
 }
