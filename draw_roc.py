@@ -30,7 +30,7 @@ net.blobs['data'].reshape(1,        # batch 大小
 
 
 # 加载图片
-im = caffe.io.load_image('D:/dataset/CXR8/images_zip/images/00000003_003.png')
+im = caffe.io.load_image('D:/dataset/CXR8/images_zip/images/00022277_001.png')
 # 用上面的transformer.preprocess来处理刚刚加载图片
 transformed_image = transformer.preprocess('data', im)
 #plt.imshow(im)
