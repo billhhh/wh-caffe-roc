@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from sklearn import metrics
 
 net_file='deploy_resnet50_CXR14.prototxt'
-caffe_model='23_2_resnet50_CXR14_b64_iter_37000.caffemodel'
+caffe_model='23_3_resnet50_CXR14_b64_iter_100000.caffemodel'
 #mean_file='ilsvrc_2012_mean.npy'
 mean_file = np.array([128,128,128])
 
@@ -30,7 +30,7 @@ net.blobs['data'].reshape(1,        # batch 大小
 
 
 # 加载图片
-im = caffe.io.load_image('D:/dataset/CXR8/test_set/00022282_003.png')
+im = caffe.io.load_image('D:/dataset/CXR8/test_set/00022276_000.png')
 # 用上面的transformer.preprocess来处理刚刚加载图片
 transformed_image = transformer.preprocess('data', im)
 #plt.imshow(im)
@@ -45,7 +45,7 @@ for i in xrange(N): # assuming you have N validation samples
     #y_true.append( y_i )  # y_i is 0 or 1 the TRUE label of x_i
 
     out = net.forward()  # get prediction for x_i
-    output_prob = out['prob'][0] #batch中第一张图像的概率值
+    output_prob = out['threshold_1'][0] #batch中第一张图像的概率值
     y_score.append( output_prob )
     # 打印概率最大的类别代号，argmax()函数是求取矩阵中最大元素的索引
     print 'predicted class is:', output_prob.argmax()

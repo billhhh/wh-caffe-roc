@@ -2085,14 +2085,22 @@ layer {
 	name: "fc_1"
 	type: "InnerProduct"
 	inner_product_param {
-		num_output: 2
+		num_output: 1
 	}
 }
 
 layer {
+  name: "probability_1"
+  type: "Sigmoid"
   bottom: "fc_1"
-  top: "prob"
-  name: "prob"
-  type: "Softmax"
+  top: "probability_1"
 }
-
+layer {
+  name: "threshold_1"
+  type: "Threshold"
+  bottom: "probability_1"
+  top: "threshold_1"
+  threshold_param {
+    threshold: 0.5
+  }
+}
